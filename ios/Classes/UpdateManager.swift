@@ -60,6 +60,17 @@ class UpdateManager {
     func cancel() {
         dfuManager.cancel()
     }
+    
+    func eraseSecondarySlot() {
+        updateLogger.log(message: "Erasing secondary slot")
+        imageManager.erase { response, error in
+            if let error = error {
+                self.updateLogger.log(message: "Error erasing secondary slot: \(error.localizedDescription)")
+            } else {
+                self.updateLogger.log(message: "Secondary slot erased successfully")
+            }
+        }
+    }
 }
 
 extension UpdateManager: FirmwareUpgradeDelegate {

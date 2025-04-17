@@ -93,6 +93,9 @@ public class SwiftMcumgrFlutterPlugin: NSObject, FlutterPlugin {
                 result(nil)
             case .readImageList:
                 try readImages(call: call, result: result)
+            case .eraseSecondarySlot:
+                try eraseSecondarySlot(call: call)
+                result(nil)
             }
         } catch let e as FlutterError {
             result(e)
@@ -222,6 +225,19 @@ public class SwiftMcumgrFlutterPlugin: NSObject, FlutterPlugin {
         }
         
         return manager.updateLogger.readLogs()
+    }
+    
+    private func eraseSecondarySlot(call: FlutterMethodCall) throws {
+        guard let args = call.arguments as? [String: Any],
+              let deviceId = args["deviceId"] as? String else {
+            throw FlutterError(code: ErrorCode.wrongArguments.rawValue, message: "Arguments missing", details: call.debugDetails)
+        }
+        
+        guard let manager = updateManagers[deviceId] else {
+            throw FlutterError(code: ErrorCode.updateManagerDoesNotExist.rawValue, message: "Update manager does not exist", details: call.debugDetails)
+        }
+        
+        manager.eraseSecondarySlot()
     }
     
     private func readImages(call: FlutterMethodCall, result: @escaping FlutterResult) throws {

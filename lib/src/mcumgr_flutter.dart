@@ -94,6 +94,12 @@ abstract class FirmwareUpdateManager {
   /// Check if the progress is paused.
   Future<bool> isPaused();
 
+  /// Erase the secondary slot.
+  ///
+  /// On Android, this will use the imageIndex parameter to specify which image slot to erase.
+  /// On iOS, the imageIndex parameter is ignored as iOS implementation doesn't support it.
+  Future<void> eraseSecondarySlot({int imageIndex = 0});
+
   /// Kill the update manager instance.
   ///
   /// If you just cancel update or get error during the update, the UM instance

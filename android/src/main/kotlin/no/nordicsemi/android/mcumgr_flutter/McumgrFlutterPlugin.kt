@@ -108,6 +108,11 @@ class McumgrFlutterPlugin : FlutterPlugin, MethodCallHandler {
 					result.success(isPaused)
 				}
 
+				FlutterMethod.eraseSecondarySlot -> {
+					eraseSecondarySlot(call)
+					result.success(null)
+				}
+
 				FlutterMethod.readLogs -> {
 					result.success(readLogs(call))
 				}
@@ -229,6 +234,19 @@ class McumgrFlutterPlugin : FlutterPlugin, MethodCallHandler {
 		return managers[address].guard {
 			throw UpdateManagerDoesNotExist("Update manager does not exist")
 		}
+	}
+
+	@Throws(FlutterError::class)
+	private fun eraseSecondarySlot(@NonNull call: MethodCall) {
+		val args = call.arguments as? Map<String, Any> ?: throw WrongArguments("Arguments expected")
+		val deviceId = args["deviceId"] as? String ?: throw WrongArguments("Device ID expected")
+		val imageIndex = (args["imageIndex"] as? Int) ?: 0
+		
+		val updateManager = managers[deviceId].guard {
+			throw UpdateManagerDoesNotExist("Update manager does not exist")
+		}
+		
+		updateManager.eraseSecondarySlot(imageIndex)
 	}
 
 	@Throws(FlutterError::class)

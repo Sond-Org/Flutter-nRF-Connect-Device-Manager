@@ -117,6 +117,19 @@ class UpdateManager(
 	var isPaused = manager.isPaused
 	/**	True if the firmware upgrade is in progress, false otherwise. */
 	var isInProgress = manager.isInProgress
+	/** Erase the secondary slot */
+	fun eraseSecondarySlot(imageIndex: Int = 0) {
+		transport.log("Erasing secondary slot for image $imageIndex")
+		imageManager.erase(imageIndex, object : McuMgrCallback<McuMgrImageStateResponse> {
+			override fun onResponse(response: McuMgrImageStateResponse) {
+				transport.log("Secondary slot erased successfully for image $imageIndex")
+			}
+			
+			override fun onError(error: McuMgrException) {
+				transport.log("Error erasing secondary slot: ${error.message}")
+			}
+		})
+	}
 	/** Read all logs */
 	fun readAllLogs(clearLogs: Boolean = false) : ProtoReadMessagesResponse {
 		return (manager.transporter as? LoggableMcuMgrBleTransport)!!.readLogs(clearLogs)

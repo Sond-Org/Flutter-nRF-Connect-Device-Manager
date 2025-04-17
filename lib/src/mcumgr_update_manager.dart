@@ -141,6 +141,16 @@ class DeviceUpdateManager extends FirmwareUpdateManager {
   Future<bool> isPaused() async => await methodChannel.invokeMethod(
       UpdateManagerMethod.isPaused.rawValue, _deviceId);
 
+  @override
+  Future<void> eraseSecondarySlot({int imageIndex = 0}) async {
+    final args = {
+      'deviceId': _deviceId,
+      'imageIndex': imageIndex,
+    };
+    await methodChannel.invokeMethod(
+        UpdateManagerMethod.eraseSecondarySlot.rawValue, args);
+  }
+
   void _setupProgressUpdateStream() {
     UpdateManagerChannel.progressStream
         .receiveBroadcastStream()
