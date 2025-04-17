@@ -62,12 +62,11 @@ class UpdateManager {
     }
     
     func eraseSecondarySlot() {
-        updateLogger.log(message: "Erasing secondary slot")
         imageManager.erase { response, error in
             if let error = error {
-                self.updateLogger.log(message: "Error erasing secondary slot: \(error.localizedDescription)")
+                self.updateLogger.log("Error erasing secondary slot: \(error.localizedDescription)", ofCategory: .image, atLevel: .error)
             } else {
-                self.updateLogger.log(message: "Secondary slot erased successfully")
+                self.updateLogger.log("Secondary slot erased successfully", ofCategory: .image, atLevel: .info)
             }
         }
     }
